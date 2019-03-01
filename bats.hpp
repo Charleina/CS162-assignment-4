@@ -2,7 +2,7 @@
  *** Program Filename: bats.hpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: holds the code for the bats percept and encounter message
  * ** Input: none
  * ** Output: none
  * *********************************************************************/

@@ -2,7 +2,7 @@
  *** Program Filename: wumpus.hpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: holds the code for the wumpus percept and encounter message
  * ** Input: none
  * ** Output: none
  * *********************************************************************/

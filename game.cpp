@@ -2,7 +2,7 @@
  *** Program Filename: game.cpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: implementation of the game class contains all logic for the entire assignment
  * ** Input: none
  * ** Output: none
  * *********************************************************************/
@@ -106,22 +106,22 @@ void Game :: set_board(){
                 this->goldx = r;
                 this->goldy = c;
             }
-            else if( randomevent == 4)
+            else if( randomevent == 4) // bats
             {
                 this->batsx=r;
                 this->batsy=c;
             }
-            else if(randomevent == 5)
+            else if(randomevent == 5)// 2nd bats
             {
                 this->batx = r;
                 this->baty = c;
             }
-            else if( randomevent == 6)
+            else if( randomevent == 6) //pit
             {
                 this->pitx=r;
                 this->pity=c;
             }
-            else
+            else// 2nd pit
             {
                 this->pittx=r;
                 this->pitty=c;
@@ -157,6 +157,7 @@ void Game :: run(){
             
             string answer;
             cin >> answer;
+            cout << endl;
             
             if(answer == "same")
                 game_reset();
@@ -179,10 +180,10 @@ void Game :: run(){
 
 /*********************************************************************
  ** Function: prompt
- ** Description:
+ ** Description: contains the prompt given to the user at the beginning of each turn.
  ** Parameters: none
  ** Pre-Conditions: none
- ** Post-Conditions: none
+ ** Post-Conditions: will have asked a user for an action and done the action
  *********************************************************************/
 void Game :: prompt(){
     
@@ -192,6 +193,7 @@ void Game :: prompt(){
         
         string answer;
         cin >> answer;
+        cout << endl;
         
         error = true;
         if(answer == "move" || answer == "Move")
@@ -202,6 +204,7 @@ void Game :: prompt(){
                 
                 string direction;
                 cin >> direction;
+                cout << endl;
                 
                 error2 = true;
                 
@@ -232,6 +235,7 @@ void Game :: prompt(){
                     
                     string direction;
                     cin >> direction;
+                    cout << endl;
                     
                     error2 = true;
                     
@@ -257,10 +261,10 @@ void Game :: prompt(){
 
 /*********************************************************************
  ** Function: move_user
- ** Description:
+ ** Description: moves the user in desired direction
  ** Parameters: int direction
- ** Pre-Conditions:
- ** Post-Conditions:
+ ** Pre-Conditions: need a direction to be heading in
+ ** Post-Conditions: will have chnaged users spot and checked for events and if the user has won
  *********************************************************************/
 bool Game :: move_user(string direction){
     //for north
@@ -332,10 +336,10 @@ bool Game :: move_user(string direction){
 
 /*********************************************************************
  ** Function: enact_event
- ** Description:
+ ** Description: will in reality do whatever the event is for the user
  ** Parameters: int which
- ** Pre-Conditions:
- ** Post-Conditions:
+ ** Pre-Conditions: need which event the user enactd
+ ** Post-Conditions: will change booleans and call functions to complete actions needed
  *********************************************************************/
 void Game :: enact_event(int which){
     this->caves.at(spotx).at(spoty).encounter_access();
@@ -353,14 +357,15 @@ void Game :: enact_event(int which){
     else if(which == 4){ // wumpus
         this->alive = false;
     }
+    cout << endl;
 }
 
 /*********************************************************************
  ** Function: move_arrow
- ** Description:
+ ** Description: will shoot an arrow in a certain direction
  ** Parameters: int direction
- ** Pre-Conditions:
- ** Post-Conditions:
+ ** Pre-Conditions: need the direction and caves vector
+ ** Post-Conditions: will have minused an arrow and have 'shot' the arrow
  *********************************************************************/
 void Game :: move_arrow(string direction){
     this->arrows--;
@@ -477,7 +482,7 @@ void Game :: move_arrow(string direction){
 
 /*********************************************************************
  ** Function: percept
- ** Description:
+ ** Description: will print out all percept that are adjacent to the user
  ** Parameters: none
  ** Pre-Conditions: none
  ** Post-Conditions: none
@@ -496,11 +501,12 @@ void Game :: percept(){
         }
     }
     //the else would be that the player is no longer alive
+    cout << endl;
 }
 
 /*********************************************************************
  ** Function: superbat
- ** Description:
+ ** Description: will move the user to a random room and check the event of the room and enact it if there is one
  ** Parameters: none
  ** Pre-Conditions: none
  ** Post-Conditions: none
@@ -544,7 +550,7 @@ void Game :: welcome(){
 
 /*********************************************************************
  ** Function: wumpus_flee
- ** Description:
+ ** Description: will 75% chance move the wumpus to a different room
  ** Parameters: none
  ** Pre-Conditions: none
  ** Post-Conditions: none
@@ -642,6 +648,7 @@ void Game :: game_restart(){
         
         int answer;
         cin >> answer;
+        cout << endl;
         
         error = true;
         
@@ -668,10 +675,10 @@ void Game :: game_restart(){
 
 /*********************************************************************
  ** Function: hidden_cordinates
- ** Description:
+ ** Description: prints out the coordinates for testing
  ** Parameters: none
  ** Pre-Conditions: none
- ** Post-Conditions:
+ ** Post-Conditions: none
  *********************************************************************/
 void Game :: hidden_coordinates(){
     cout << spotx << " " << spoty << " users spot row and column" << endl;

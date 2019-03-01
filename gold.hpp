@@ -2,7 +2,7 @@
  *** Program Filename: gold.hpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: holds the percept and the encounter message for the Gold class
  * ** Input: none
  * ** Output: none
  * *********************************************************************/
@@ -20,7 +20,7 @@ private:
     string percept;
 public:
     Gold();
-    string percept_message() {return percept;}
-    string encounter_message() {return encounter;}
+    string percept_message() { return percept; }
+    string encounter_message() { return encounter; }
 };
 #endif

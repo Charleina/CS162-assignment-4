@@ -2,7 +2,7 @@
  *** Program Filename: pit.cpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: contains the implementation for pit class
  * ** Input: none
  * ** Output: none
  * *********************************************************************/

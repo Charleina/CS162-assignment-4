@@ -2,7 +2,7 @@
  *** Program Filename: room.hpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: holds the code for the Room functions that interact with events 
  * ** Input: none
  * ** Output: none
  * *********************************************************************/
@@ -26,15 +26,17 @@ using namespace std;
 
 class Room {
 private:
-    Event * event;
-    int event_type;
+    Event * event; //can contain an event or not
+    int event_type; //will hold number to verify which event it is
 public:
     Room();
     Room(const Room& r);
     void operator=(const Room& ro);
-    
-    void set_event(int which);
+    //getter
     int check_event() {return this->event_type;}
+    //setter
+    void set_event(int which);
+ 
     void clear_event();
     void encounter_access();
     void percept_access();

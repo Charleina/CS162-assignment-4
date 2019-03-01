@@ -2,7 +2,7 @@
  *** Program Filename: gold.cpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: this contains the implementation for the gold class
  * ** Input: none
  * ** Output: none
  * *********************************************************************/
@@ -17,7 +17,7 @@
  *********************************************************************/
 Gold :: Gold(){
     this->percept = "You see a glimmer nearby.";
-    this->encounter = "You have picked up the gold!";
+    this->encounter = "You have entered the room with the gold chest and obtained the gold!";
 }
 
 

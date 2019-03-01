@@ -2,7 +2,7 @@
  *** Program Filename: bats.cpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: contains the implementation for bats class
  * ** Input: none
  * ** Output: none
  * *********************************************************************/

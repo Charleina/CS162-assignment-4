@@ -2,7 +2,7 @@
  *** Program Filename: pit.hpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: contains the percepts and encounter message for pit
  * ** Input: none
  * ** Output: none
  * *********************************************************************/
@@ -21,7 +21,7 @@ private:
     string encounter;
 public:
     Pit();
-    string percept_message() { return percept;}
-    string encounter_message() {return encounter;}
+    string percept_message() { return percept; }
+    string encounter_message() {return encounter; }
 };
 #endif

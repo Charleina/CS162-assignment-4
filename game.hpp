@@ -2,7 +2,7 @@
  *** Program Filename: game.hpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: contains the game logic
  * ** Input: none
  * ** Output: none
  * *********************************************************************/

@@ -54,7 +54,10 @@ int main(int argc, char** argv){
     //creates game object
     Game g;
     
+    //sets the cavesize to the argc
     g.set_cavesize(n);
+    
+    //will set board up
     g.set_board();
     
     //runs game

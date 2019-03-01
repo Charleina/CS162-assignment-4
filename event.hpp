@@ -2,7 +2,7 @@
  *** Program Filename: event.hpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: holds the code for the Ev ent abstract class
  * ** Input: none
  * ** Output: none
  * *********************************************************************/

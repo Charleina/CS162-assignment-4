@@ -2,7 +2,7 @@
  *** Program Filename: room.cpp
  * ** Author: Charlene Wang
  * ** Date: 3/4/19
- * ** Description:
+ * ** Description: this contains the implementation for the room class
  * ** Input: none
  * ** Output: none
  * *********************************************************************/
