@@ -17,7 +17,7 @@
  *********************************************************************/
 Gold :: Gold(){
     this->percept = "You see a glimmer nearby.";
-    this->encounter = "You have picked up Gold!";
+    this->encounter = "You have picked up the gold!";
 }
 
 

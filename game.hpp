@@ -11,7 +11,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <stdlib.h> 
+#include <stdlib.h>
+#include <random>
+#include <algorithm>
+#include <iterator>
 
 #include "room.hpp"
 #include "event.hpp"

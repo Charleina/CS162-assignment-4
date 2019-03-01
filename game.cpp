@@ -71,19 +71,21 @@ Game :: Game(){
  *********************************************************************/
 void Game :: set_board(){
     //creates the arrays
-    caves = vector<vector<Room> >(cavesize, vector<Room>(cavesize));
+    this->caves = vector<vector<Room> >(cavesize, vector<Room>(cavesize));
+    vector<int> v = {1, 2, 3, 4, 5, 6, 7};
+    random_shuffle(v.begin(), v.end());
     
-    cout << "board is being set up" << endl;
+    //cout << "board is being set up" << endl;
     //will set up the board
     int r = 0, c = 0, randomevent = 0, count = 0;
-    for(int i = 0; i < cavesize; i++){
+
+    while( count != 7){
         r = rand() % cavesize;
         c = rand() % cavesize;
-        if(count == 7)
-            break;
-        else if(caves.at(r).at(c).check_event() == 0){
+        
+        if(caves.at(r).at(c).check_event() == 0 && (startx != r && starty != c)){
+            randomevent = v[count];
             count++;
-            randomevent = rand() % 7 + 1;
             this->caves.at(r).at(c).set_event(randomevent);
             if(randomevent == 1) // where the rope is
             {
@@ -92,14 +94,14 @@ void Game :: set_board(){
                 this->spoty = c;
                 this->starty = c;
             }
-            else if(randomevent == 2)
+            else if(randomevent == 2)//wumpus
             {
                 this->wumpusx = r;
                 this->wumpusy = c;
                 this->startwumpusx = r;
                 this->startwumpusy = c;
             }
-            else if( randomevent == 3)
+            else if( randomevent == 3)//gold
             {
                 this->goldx = r;
                 this->goldy = c;
@@ -139,11 +141,11 @@ void Game :: run(){
     this->welcome();
     
     do{
-        hidden_coordinates();
-        prompt();
-        hidden_coordinates();
+        //hidden_coordinates();
         percept();
-    } while( this->alive || !win);
+        prompt();
+        //hidden_coordinates();
+    } while( this->alive && !win);
     
     if(!win)
     {
@@ -233,7 +235,7 @@ void Game :: prompt(){
                     
                     error2 = true;
                     
-                    if(direction == "n" || direction == "w" || direction == "w" || direction == "e")
+                    if(direction == "n" || direction == "w" || direction == "s" || direction == "e")
                         move_arrow(direction);
                     
                     else{
@@ -262,9 +264,9 @@ void Game :: prompt(){
  *********************************************************************/
 bool Game :: move_user(string direction){
     //for north
-    if(direction == "n" && (spoty - 1) >= 0)
+    if(direction == "n" && (spotx - 1 ) >= 0)
     {
-        spoty -= 1;
+        spotx -= 1;
         int whichevent = caves.at(spotx).at(spoty).check_event();
         if(whichevent > 0)
         {
@@ -277,22 +279,7 @@ bool Game :: move_user(string direction){
     }
     
     //for south
-    else if(direction == "s" && (spoty + 1)<= cavesize)
-    {
-        spoty += 1;
-        int whichevent = caves.at(spotx).at(spoty).check_event();
-        if(whichevent > 0)
-        {
-            enact_event(whichevent);
-        }
-        else if(spotx == startx && spoty == starty && gold && wumpus && alive)
-            this->win = true;
-        
-        return true;
-        
-    }
-    //for east
-    else if(direction == "e" && (spotx + 1) <= cavesize)
+    else if(direction == "s" && (spotx + 1) < cavesize)
     {
         spotx += 1;
         int whichevent = caves.at(spotx).at(spoty).check_event();
@@ -306,10 +293,25 @@ bool Game :: move_user(string direction){
         return true;
         
     }
-    //for west
-    else if(direction == "w" && (spotx -1) >= 0)
+    //for east
+    else if(direction == "e" && (spoty + 1) < cavesize)
     {
-        spotx -= 1;
+        spoty += 1;
+        int whichevent = caves.at(spotx).at(spoty).check_event();
+        if(whichevent > 0)
+        {
+            enact_event(whichevent);
+        }
+        else if(spotx == startx && spoty == starty && gold && wumpus && alive)
+            this->win = true;
+        
+        return true;
+        
+    }
+    //for west
+    else if(direction == "w" && (spoty - 1) >= 0)
+    {
+        spoty -= 1;
         int whichevent = caves.at(spotx).at(spoty).check_event();
         if(whichevent > 0)
         {
@@ -336,15 +338,21 @@ bool Game :: move_user(string direction){
  ** Post-Conditions:
  *********************************************************************/
 void Game :: enact_event(int which){
-    caves.at(spotx).at(spoty).encounter_access();
-    if(which == 1)
+    this->caves.at(spotx).at(spoty).encounter_access();
+    if(which == 1){ //gold
         this->gold = true;
-    else if(which == 2)
+        this->caves.at(spotx).at(spoty).clear_event();
+    }
+    else if(which == 2) //bats
         this->superbat();
-    else if(which == 3)
+    
+    else if(which == 3){ //pit
         this->alive = false;
-    else if(which == 4)
+    }
+    
+    else if(which == 4){ // wumpus
         this->alive = false;
+    }
 }
 
 /*********************************************************************
@@ -356,59 +364,111 @@ void Game :: enact_event(int which){
  *********************************************************************/
 void Game :: move_arrow(string direction){
     this->arrows--;
+    bool hitwall = false;
     //for north
-    if(direction == "1")
-        for(int i = 0; i <= 3; i++)
+    if(direction == "n")
+    {
+        for(int i = 1; i <= 3; i++)
         {
-            if(spoty == wumpusy && spotx + i == wumpusx)
+            if((spotx - i) < 0)
+            {
+                cout << "The arrow hit a wall and not a wumpus..." << endl;
+                hitwall = true;
+                wumpus_flee();
+                return;
+            }
+
+            else if(spoty == wumpusy && (spotx - i) == wumpusx)
             {
                 cout << "The arrow flew into the room of the Wumpus and pierced the Wumpus right in the heart! The Wumpus is now dead" << endl;
-                caves.at(spotx + i).at(spoty).clear_event();
+                caves.at(wumpusx).at(wumpusy).clear_event();
                 wumpus = true;
                 return;
             }
         }
+        if(!hitwall && !wumpus){
+            cout << "the arrow went through three rooms and hit nothing... you missed the Wumpus" << endl;
+            wumpus_flee();
+        }
+    }
     
     //for south
-    else if(direction == "2" )
+    else if(direction == "s" )
+    {
         for(int i = 0; i <= 3; i++)
         {
-            if(spoty == wumpusy && spotx - i == wumpusx)
+            if((spotx + i) >= cavesize)
+            {
+                cout << "The arrow hit a wall and not a wumpus..." << endl;
+                hitwall = true;
+                wumpus_flee();
+                return;
+            }
+            else if(spoty == wumpusy && (spotx + i) == wumpusx)
             {
                 cout << "The arrow flew into the room of the Wumpus and pierced the Wumpus right in the heart! The Wumpus is now dead" << endl;
-                caves.at(spotx - i).at(spoty).clear_event();
+                caves.at(wumpusx).at(wumpusy).clear_event();
                 wumpus = true;
                 return;
             }
         }
+        if(!hitwall && !wumpus){
+        cout << "the arrow went through three rooms and hit nothing... you missed the Wumpus" << endl;
+            wumpus_flee();
+        }
+    }
     
-    //for east
-    else if(direction == "3")
+    //for west
+    else if(direction == "w")
+    {
         for(int i = 0; i <= 3; i++)
         {
-            if(spoty + i == wumpusy && spotx == wumpusx)
+            if((spoty - i) < 0)
+            {
+                cout << "The arrow hit a wall and not a wumpus..." << endl;
+                hitwall = true;
+                wumpus_flee();
+                return;
+            }
+            else if((spoty - i) == wumpusy && spotx == wumpusx)
             {
                 cout << "The arrow flew into the room of the Wumpus and pierced the Wumpus right in the heart! The Wumpus is now dead" << endl;
-                caves.at(spotx).at(spoty + i).clear_event();
+                caves.at(wumpusx).at(wumpusy).clear_event();
                 wumpus = true;
                 return;
             }
         }
-    //for west
-    else if(direction == "4")
+        if(!hitwall && !wumpus){
+            cout << "the arrow went through three rooms and hit nothing... you missed the Wumpus" << endl;
+            wumpus_flee();
+        }
+    }
+    //for east
+    else if(direction == "e")
+    {
         for(int i = 0; i <= 3; i++)
         {
-            if(spoty - i == wumpusy && spotx == wumpusx)
+            if((spoty + i) >= cavesize)
+            {
+                cout << "The arrow hit a wall and not a wumpus..." << endl;
+                hitwall = true;
+                wumpus_flee();
+                return;
+            }
+            if((spoty + i) == wumpusy && spotx == wumpusx)
             {
                 cout << "The arrow flew into the room of the Wumpus and pierced the Wumpus right in the heart! The Wumpus is now dead" << endl;
-                caves.at(spotx).at(spoty - i).clear_event();
+                caves.at(wumpusx).at(wumpusy).clear_event();
                 this->wumpus = true;
                 return;
             }
         }
-    //for when the arrow misses
-    wumpus_flee();
-    if(arrows == 0 && wumpus == false)
+        if(!hitwall && !wumpus){
+            cout << "the arrow went through three rooms and hit nothing... you missed the Wumpus" << endl;
+            wumpus_flee();
+        }
+    }
+    if(arrows == 0 && !wumpus)
     {
         this->alive = false;
         cout << "You have run out of arrows! GAME OVER" << endl;
@@ -426,7 +486,11 @@ void Game :: percept(){
     if(alive){
         for(int i = spotx - 1; i <= spotx + 1; i++){
             for(int j = spoty - 1; j <= spoty + 1; j++){
-                if(caves.at(i).at(j).check_event() > 0 && (spotx != i && spoty != j))
+                if(i == spotx && j == spoty)
+                   continue;
+                else if(i >= cavesize || i < 0 || j >= cavesize || j < 0)
+                    continue;
+                else if(caves.at(i).at(j).check_event() > 0 )
                     this->caves.at(i).at(j).percept_access();
             }
         }
@@ -442,10 +506,10 @@ void Game :: percept(){
  ** Post-Conditions: none
  *********************************************************************/
 void Game :: superbat(){
-    spotx = rand() % cavesize + 1;
-    spoty = rand() % cavesize + 1;
+    spotx = rand() % cavesize;
+    spoty = rand() % cavesize;
     int which = caves.at(spotx).at(spoty).check_event();
-    if( which > 0)
+    if( which > 0 )
         enact_event(which);
 }
 
@@ -458,17 +522,24 @@ void Game :: superbat(){
  *********************************************************************/
 void Game :: welcome(){
     cout << "***********************************************" << endl;
+    cout << "                                               " << endl;
     cout << "          Welcome to Hunt the Wumpus!          " << endl;
+    cout << "                                               " << endl;
     cout << "***********************************************" << endl << endl;
+    
     cout << "You are an adventure and you have ventured into a cave by sliding down a rope!" << endl << endl;
+    
+    cout << "*********************************************************************" << endl << endl;
     cout << "Now your objectives are to:" << endl;
     cout << "    ->Find the Chest of Gold" << endl;
     cout << "    ->Hunt and kill the Wumpus using your arrows (you only have 3!)" << endl;
-    cout << "    ->Find your way back to your rope, it will be your escape rope" << endl;
-     cout << "***********************************************" << endl;
-    cout << "Use your Percept ability to sense your surroundings!" << endl;
-    cout << "When you think the Wumpus is in a room in a certain direction, shoot an arrow in that direction!" << endl;
-    cout << "Good luck, Don't get eaten by the Wumpus!" << endl;
+    cout << "    ->Find your way back to your rope, it will be your escape rope" << endl << endl;
+    cout << "*********************************************************************" << endl << endl;
+    
+    cout << "Use your Percept ability to sense your surroundings." << endl;
+    cout << "The wumpus is currently sleeping in its room, when you think the Wumpus is in specific direction (n/s/e/w) from you, shoot an arrow in that direction. " << endl;
+    cout << "DO NOT go into the room of the Wumpus, it will eat you alive!" << endl << endl;
+    cout << "Good luck!" << endl << endl;
 }
 
 /*********************************************************************
@@ -488,12 +559,12 @@ void Game :: wumpus_flee(){
         
         bool newposition = false;
         
-        while(!newposition){
+        do{
             int tempx = wumpusx;
             int tempy = wumpusy;
             
-            this->wumpusx = rand() % cavesize + 1;
-            this->wumpusy = rand() % cavesize + 1;
+            this->wumpusx = rand() % cavesize;
+            this->wumpusy = rand() % cavesize;
             
             if(wumpusx == spotx && wumpusy == spoty)
                 newposition = newposition;
@@ -506,7 +577,7 @@ void Game :: wumpus_flee(){
             
             else
                 newposition = true;
-        }
+        }while(!newposition);
         caves.at(wumpusx).at(wumpusy).set_event(2);
     }
     
@@ -523,8 +594,32 @@ void Game :: game_reset(){
     this->spotx = startx;
     this->spoty = starty;
     this->arrows = 3;
-    this->wumpusx = startwumpusx;
-    this->wumpusy = startwumpusy;
+    
+    if(wumpusx != startwumpusx && wumpusy != startwumpusy && wumpus)
+    {
+        this->wumpusx = startwumpusx;
+        this->wumpusy = startwumpusy;
+        this->wumpus = false;
+        this->caves.at(wumpusx).at(wumpusy).set_event(2);
+    }
+    else if(wumpusx == startwumpusx && wumpusy == startwumpusy && wumpus){
+        this->wumpus = false;
+        this->caves.at(wumpusx).at(wumpusy).set_event(2);
+    }
+    else if( wumpusx != startwumpusx && wumpusy != startwumpusy && !wumpus)
+    {
+        this->wumpusx = startwumpusx;
+        this->wumpusy = startwumpusy;
+    }
+    //for wumpus being in same starting position and not being dead
+    
+    if(gold){
+        this->gold = false;
+        this->caves.at(goldx).at(goldy).set_event(3);
+    }
+    
+    this->alive = true;
+    
     
     run();
 }
@@ -563,6 +658,9 @@ void Game :: game_restart(){
     
     set_board();
     
+    this->wumpus = false;
+    this->gold = false;
+    this->alive = true;
     this->arrows = 3;
     
     run();
@@ -576,11 +674,11 @@ void Game :: game_restart(){
  ** Post-Conditions:
  *********************************************************************/
 void Game :: hidden_coordinates(){
-    cout << "users spot row and column: " << spotx << " " << spoty << endl;
-    cout << "wumpus spot row and column: " << wumpusx << " " << wumpusy << endl;
-    cout << "bats 1: " << batsx << " " << batsy << endl;
-    cout << "bats 2: " << batx << " " << baty << endl;
-    cout << "pit 1: " << pitx << " " << pity << endl;
-    cout << "pit2: " << pittx << " " << pitty << endl;
-    cout << "gold: "<< goldx << " " << goldy << endl;
+    cout << spotx << " " << spoty << " users spot row and column" << endl;
+    cout << wumpusx << " " << wumpusy << " wumpus spot row and column" << endl;
+    cout << batsx << " " << batsy << " bats 1"<< endl;
+    cout << batx << " " << baty << " bats 2" << endl;
+    cout << pitx << " " << pity << " pit 1" << endl;
+    cout << pittx << " " << pitty << " pit2" << endl;
+    cout << goldx << " " << goldy << " gold" << endl;
 }

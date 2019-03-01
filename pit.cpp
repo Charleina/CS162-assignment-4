@@ -17,6 +17,6 @@
  *********************************************************************/
 Pit :: Pit(){
     this->percept = "You feel a breeze.";
-    this->encounter = "You have entered the bottomless pit...";
+    this->encounter = "Oh no! You have fallen into the bottomless pit! GAME OVER";
 }
 

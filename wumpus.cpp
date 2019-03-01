@@ -17,5 +17,5 @@
   *********************************************************************/
 Wumpus :: Wumpus(){
     this->percept = "You smell a terrible stench.";
-    this->encounter = "The Wumpus has angrily eaten you...";
+    this->encounter = "OH no! The Wumpus has angrily eaten you, GAME OVER";
 }

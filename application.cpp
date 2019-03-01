@@ -49,7 +49,7 @@ int main(int argc, char** argv){
     }
     
     //intialize seed
-    srand((unsigned)time(0));
+    srand(time(NULL));
     
     //creates game object
     Game g;

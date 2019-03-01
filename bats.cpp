@@ -17,6 +17,6 @@
  *********************************************************************/
 Bats :: Bats(){
     this->percept = "You hear wings flapping.";
-    this->encounter = "An Angry super bat has takn you to a random room!";
+    this->encounter = "An Angry super bat has taken you to a random room!";
 }
 

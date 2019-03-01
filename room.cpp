@@ -16,7 +16,7 @@
  ** Post-Conditions: intializes certain variables
  *********************************************************************/
 Room :: Room(){
-    cout << "room constructor called" << endl;
+    //cout << "room constructor called" << endl;
     event_type = 0;
     event = NULL;
 }
@@ -69,6 +69,11 @@ void Room :: set_event(int which){
         this->event = new Pit;
         this->event_type = 3;
     }
+    else if(which == 1)
+    {
+        //this is where the player starts
+        this->event_type = 0;
+    }
     
 }
 
@@ -80,8 +85,9 @@ void Room :: set_event(int which){
  ** Post-Conditions: sets the event to empty
  *********************************************************************/
 void Room :: clear_event(){
-    this->event = NULL;
-    event_type = 0;
+    delete event;
+    Event* event;
+    this->event_type = 0;
 }
 
 /*********************************************************************
