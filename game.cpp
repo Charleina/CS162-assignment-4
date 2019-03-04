@@ -141,10 +141,10 @@ void Game :: run(){
     this->welcome();
     
     do{
-        hidden_coordinates();
+        //hidden_coordinates();
         percept();
         prompt();
-        hidden_coordinates();
+        //hidden_coordinates();
     } while( this->alive && !win);
     
     if(!win)
