@@ -86,7 +86,7 @@ void Room :: set_event(int which){
  *********************************************************************/
 void Room :: clear_event(){
     delete event;
-    Event* event;
+    Event* event = NULL;
     this->event_type = 0;
 }
 

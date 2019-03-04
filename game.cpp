@@ -17,7 +17,7 @@ using namespace std;
  ** Post-Conditions: intializes certain variables
  *********************************************************************/
 Game :: Game(){
-    cout<< "game constructor called" << endl;
+    //cout<< "game constructor called" << endl;
     this->cavesize = 0;
     
     this->spotx = 0;
@@ -141,10 +141,10 @@ void Game :: run(){
     this->welcome();
     
     do{
-        //hidden_coordinates();
+        hidden_coordinates();
         percept();
         prompt();
-        //hidden_coordinates();
+        hidden_coordinates();
     } while( this->alive && !win);
     
     if(!win)
@@ -640,7 +640,7 @@ void Game :: game_reset(){
 void Game :: game_restart(){
     for(int i = 0; i < cavesize; i++)
         for(int j = 0; j < cavesize; j++)
-            caves.at(i).at(j).clear_event();
+            this->caves.at(i).at(j).clear_event();
     
     bool error = true;
     do{
