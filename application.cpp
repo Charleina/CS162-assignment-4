@@ -20,6 +20,7 @@
 #include "bats.hpp"
 #include "wumpus.hpp"
 #include "pit.hpp"
+//#include "ai.hpp"
 
 using namespace std;
 

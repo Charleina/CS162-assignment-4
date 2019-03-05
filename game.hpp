@@ -18,6 +18,7 @@
 
 #include "room.hpp"
 #include "event.hpp"
+//#include "ai.hpp"
 
 using namespace std;
 
@@ -45,6 +46,13 @@ private:
     int pitx, pity, pittx, pitty;
     int goldx, goldy;
     
+    /*//for ai
+    int previousturn, previousturn2;
+    string ai_direction;
+    bool goodeventnearby, badeventnearby, shoot;
+    Ai ai;
+    */
+    
 public:
     Game(); //creates vectors
     
@@ -66,7 +74,13 @@ public:
     void wumpus_flee();
     
     void hidden_coordinates();
-    
+    /*
+    void run_ai();
+    void ai_prompt(bool nearby);
+    void move_ai(int direction);
+    void move_airandom(bool oscillating);
+    void strategic_move_ai();
+    void ai_percept();*/
 };
 
 #endif

@@ -47,16 +47,24 @@ Game :: Game(){
     this->pitty=0;
     this->goldx=0;
     this->goldy=0;
+    /*
+    this->previousturn = 0;
+    this->previousturn2= 0;
+    this->ai_direction = "";
+    this->goodeventnearby = false;
+    this->badeventnearby = false;
+    this->shoot = false;
+    */
     
     //creates the arrays
     /*(for(int row = 0; row < this->cavesize; row++){
-        vector<Room*> r;
-        for(int column = 0; column < cavesize; column++){
-            r.push_back(new Room);
-        }
-        caves.push_back(r);
-    }
-    */
+     vector<Room*> r;
+     for(int column = 0; column < cavesize; column++){
+     r.push_back(new Room);
+     }
+     caves.push_back(r);
+     }
+     */
     //caves = vector<vector<Room> > (cavesize, vector<Room>(cavesize));
     //cout << caves[0][0]->check_event() << endl;
     
@@ -78,7 +86,7 @@ void Game :: set_board(){
     //cout << "board is being set up" << endl;
     //will set up the board
     int r = 0, c = 0, randomevent = 0, count = 0;
-
+    
     while( count != 7){
         r = rand() % cavesize;
         c = rand() % cavesize;
@@ -138,43 +146,49 @@ void Game :: set_board(){
  ** Post-Conditions: game will start and end
  *********************************************************************/
 void Game :: run(){
+    //bool airun = false;
+    
+    //airun =
     this->welcome();
     
-    do{
-        //hidden_coordinates();
-        percept();
-        prompt();
-        //hidden_coordinates();
-    } while( this->alive && !win);
-    
-    if(!win)
-    {
-        bool error = true;
+    //if(!airun){
         do{
-            error = true;
-            
-            cout << "Unfortunately it looks like you lost.. Would you like to play again with the same map or different map? Or would you like to quit? ('same'/'different'/'quit)" << endl;
-            
-            string answer;
-            cin >> answer;
-            cout << endl;
-            
-            if(answer == "same")
-                game_reset();
-            else if(answer == "different")
-                game_restart();
-            else if(answer == "quit")
-                cout << "Thanks for playing!!" << endl;
-            else{
-                cout << "invalid input, please try again." << endl;
-                error = false;
-            }
-            
-        } while(!error);
-    }
-    else
-        cout << "CONGRATULATIONS!! You made it back to where you started with the gold and succeeded in your mission to Hunt the Wumpus!" << endl;
-    //game over here
+            //hidden_coordinates();
+            percept();
+            prompt();
+            //hidden_coordinates();
+        } while( this->alive && !win);
+        
+        if(!win)
+        {
+            bool error = true;
+            do{
+                error = true;
+                
+                cout << "Unfortunately it looks like you lost.. Would you like to play again with the same map or different map? Or would you like to quit? ('same'/'different'/'quit)" << endl;
+                
+                string answer;
+                cin >> answer;
+                cout << endl;
+                
+                if(answer == "same")
+                    game_reset();
+                else if(answer == "different")
+                    game_restart();
+                else if(answer == "quit")
+                    cout << "Thanks for playing!!" << endl;
+                else{
+                    cout << "invalid input, please try again." << endl;
+                    error = false;
+                }
+                
+            } while(!error);
+        }
+        else
+            cout << "CONGRATULATIONS!! You made it back to where you started with the gold and succeeded in your mission to Hunt the Wumpus!" << endl;
+        //game over here
+    //}
+    //else would be ai is doing it their self
     
 }
 
@@ -331,7 +345,7 @@ bool Game :: move_user(string direction){
         cout << "Out of bounds! Try again." << endl;
         return false;
     }
-        
+    
 }
 
 /*********************************************************************
@@ -382,7 +396,7 @@ void Game :: move_arrow(string direction){
                 wumpus_flee();
                 return;
             }
-
+            
             else if(spoty == wumpusy && (spotx - i) == wumpusx)
             {
                 cout << "The arrow flew into the room of the Wumpus and pierced the Wumpus right in the heart! The Wumpus is now dead" << endl;
@@ -418,7 +432,7 @@ void Game :: move_arrow(string direction){
             }
         }
         if(!hitwall && !wumpus){
-        cout << "the arrow went through three rooms and hit nothing... you missed the Wumpus" << endl;
+            cout << "the arrow went through three rooms and hit nothing... you missed the Wumpus" << endl;
             wumpus_flee();
         }
     }
@@ -492,7 +506,7 @@ void Game :: percept(){
         for(int i = spotx - 1; i <= spotx + 1; i++){
             for(int j = spoty - 1; j <= spoty + 1; j++){
                 if(i == spotx && j == spoty)
-                   continue;
+                    continue;
                 else if(i >= cavesize || i < 0 || j >= cavesize || j < 0)
                     continue;
                 else if(caves.at(i).at(j).check_event() > 0 )
@@ -524,7 +538,7 @@ void Game :: superbat(){
  ** Description: will intro user to game
  ** Parameters: none
  ** Pre-Conditions: none
- ** Post-Conditions: none
+ ** Post-Conditions: will return true or false depending if user wants ai to play
  *********************************************************************/
 void Game :: welcome(){
     cout << "***********************************************" << endl;
@@ -533,7 +547,7 @@ void Game :: welcome(){
     cout << "                                               " << endl;
     cout << "***********************************************" << endl << endl;
     
-    cout << "You are an adventure and you have ventured into a cave by sliding down a rope!" << endl << endl;
+    cout << "You are an adventurer and you have ventured into a cave by sliding down a rope!" << endl << endl;
     
     cout << "*********************************************************************" << endl << endl;
     cout << "Now your objectives are to:" << endl;
@@ -545,7 +559,31 @@ void Game :: welcome(){
     cout << "Use your Percept ability to sense your surroundings." << endl;
     cout << "The wumpus is currently sleeping in its room, when you think the Wumpus is in specific direction (n/s/e/w) from you, shoot an arrow in that direction. " << endl;
     cout << "DO NOT go into the room of the Wumpus, it will eat you alive!" << endl << endl;
-    cout << "Good luck!" << endl << endl;
+    /*
+    bool error = true;
+    do{
+        cout << "Would you like the computer to play for you? (y/n)" << endl;
+        
+        string answer;
+        cin >> answer;
+        cout << endl;
+        
+        error = true;
+        
+        if(answer == "y"){
+            run_ai();
+            return true;
+        }
+        else if(answer == "n"){
+            cout << "Good luck!" << endl << endl;
+            return false;        }
+        else{
+            error = false;
+            cout << "Invaid input, try again" << endl;
+        }
+        
+    } while(!error);
+     */
 }
 
 /*********************************************************************
@@ -689,3 +727,361 @@ void Game :: hidden_coordinates(){
     cout << pittx << " " << pitty << " pit2" << endl;
     cout << goldx << " " << goldy << " gold" << endl;
 }
+
+/*********************************************************************
+ ** Function: run_ai
+ ** Description: will play the game for the user
+ ** Parameters: none
+ ** Pre-Conditions: board needs to be set up
+ ** Post-Conditions: none
+ *********************************************************************/
+/*void Game :: run_ai(){
+    bool event_nearby = false;
+    //first try to find a corner without running into an event
+    do{
+        
+        ai_percept();
+        
+        if(goodeventnearby || badeventnearby)
+            event_nearby = true;
+        ai_prompt(event_nearby);
+        
+        int event = caves.at(spotx).at(spoty).check_event();
+        if(event > 0)
+            enact_event(event);
+        
+        //for error checking
+        hidden_coordinates();
+        cout << "next day" << endl << endl;
+        
+        event_nearby = false;
+    }while(alive && !win);
+    
+    if(!win)
+    {
+        bool error = true;
+        do{
+            error = true;
+            
+            cout << "Unfortunately it looks like the AI lost.. Would you like to play again with the same map or different map? Or would you like to quit? ('same'/'different'/'quit)" << endl;
+            
+            string answer;
+            cin >> answer;
+            cout << endl;
+            
+            if(answer == "same")
+                game_reset();
+            else if(answer == "different")
+                game_restart();
+            else if(answer == "quit")
+                cout << "Thanks for playing!!" << endl;
+            else{
+                cout << "invalid input, please try again." << endl;
+                error = false;
+            }
+            
+        } while(!error);
+    }
+    else
+        cout << "CONGRATULATIONS! THE AI BEAT THE GAME." << endl;
+}
+
+/*********************************************************************
+ ** Function: ai_prompt
+ ** Description: will either shoot the wumpus or move the ai
+ ** Parameters: bool nearby
+ ** Pre-Conditions: need variables, functions, and objects to exist
+ ** Post-Conditions: will move the user or shoot an arrow
+ *********************************************************************/
+/*void Game :: ai_prompt(bool nearby){
+    if(!shoot){
+        
+        this->previousturn2 = previousturn;
+        //checks for oscillating
+        if(previousturn == previousturn2)
+            ai.set_oscillating(true);
+    
+        if( nearby && ai.check_oscillating() == false)
+            strategic_move_ai();
+        else if( nearby && ai.check_oscillating() == true)
+            move_airandom(true);
+        else
+            move_airandom(false);
+        
+        //prints what ai decided to do
+        cout << "the AI decided to go " << ai_direction << endl;
+        
+        if(gold && wumpus && alive){
+            cout << "the Ai has retrieved the gold and killed the wumpus!" << endl;
+            do{
+                ai.start_return();
+                move_ai(ai.return_moves());
+                
+                if(spotx == startx && spoty == starty)
+                    win = true;
+            }while(!win);
+        }
+    }
+    //if wumpus is nearby ai will shoot randomly in a direction that isnt a wall
+    else
+    {
+        bool hitwall = false;
+        this->arrows--;
+        bool error = true;
+        do{
+            error = true;
+            int move = rand() * 4 + 1;
+            //north
+            if(move == 1 && (spotx - 1 ) >= 0){
+                for(int i = 1; i <= 3; i++){
+                    if(spoty == wumpusy && (spotx - i) == wumpusx)
+                    {
+                        cout << "The arrow flew into the room of the Wumpus and pierced the Wumpus right in the heart! The Wumpus is now dead" << endl;
+                        caves.at(wumpusx).at(wumpusy).clear_event();
+                        wumpus = true;
+                        shoot = false;
+                        return;
+                    }
+                    if((spotx - i) < 0)
+                    {
+                        cout << "The arrow hit a wall and not a wumpus..." << endl;
+                        hitwall = true;
+                        wumpus_flee();
+                        return;
+                    }
+                }
+                if(!hitwall && !wumpus){
+                    cout << "the arrow went through three rooms and hit nothing... The AI missed the Wumpus" << endl;
+                    wumpus_flee();
+                }
+            }
+            //south
+            else if(move == 2 && (spotx + 1) < cavesize){
+                for(int i = 0; i <= 3; i++)
+                {
+                    if((spotx + i) >= cavesize)
+                    {
+                        cout << "The arrow hit a wall and not a wumpus..." << endl;
+                        hitwall = true;
+                        wumpus_flee();
+                        return;
+                    }
+                    else if(spoty == wumpusy && (spotx + i) == wumpusx)
+                    {
+                        cout << "The arrow flew into the room of the Wumpus and pierced the Wumpus right in the heart! The Wumpus is now dead" << endl;
+                        caves.at(wumpusx).at(wumpusy).clear_event();
+                        wumpus = true;
+                        shoot = false;
+                        return;
+                    }
+                }
+                if(!hitwall && !wumpus){
+                    cout << "the arrow went through three rooms and hit nothing... The AI missed the Wumpus" << endl;
+                    wumpus_flee();
+                }
+            }
+            //east
+            else if(move == 3 && (spoty + 1) < cavesize){
+                for(int i = 0; i <= 3; i++)
+                {
+                    if((spotx + i) >= cavesize)
+                    {
+                        cout << "The arrow hit a wall and not a wumpus..." << endl;
+                        hitwall = true;
+                        wumpus_flee();
+                        return;
+                    }
+                    else if(spoty == wumpusy && (spotx + i) == wumpusx)
+                    {
+                        cout << "The arrow flew into the room of the Wumpus and pierced the Wumpus right in the heart! The Wumpus is now dead" << endl;
+                        caves.at(wumpusx).at(wumpusy).clear_event();
+                        wumpus = true;
+                        shoot = false;
+                        return;
+                    }
+                }
+                if(!hitwall && !wumpus){
+                    cout << "the arrow went through three rooms and hit nothing... The AI missed the Wumpus" << endl;
+                    wumpus_flee();
+                }
+            }
+            //west
+            else if(move == 4 && (spoty - 1) >= 0){
+                for(int i = 0; i <= 3; i++)
+                {
+                    if((spoty - i) < 0)
+                    {
+                        cout << "The arrow hit a wall and not a wumpus..." << endl;
+                        hitwall = true;
+                        wumpus_flee();
+                        return;
+                    }
+                    else if((spoty - i) == wumpusy && spotx == wumpusx)
+                    {
+                        cout << "The arrow flew into the room of the Wumpus and pierced the Wumpus right in the heart! The Wumpus is now dead" << endl;
+                        caves.at(wumpusx).at(wumpusy).clear_event();
+                        wumpus = true;
+                        shoot = false;
+                        return;
+                    }
+                }
+                if(!hitwall && !wumpus){
+                    cout << "the arrow went through three rooms and hit nothing... The AI missed the Wumpus" << endl;
+                    wumpus_flee();
+                }
+            }
+            else
+                error = false;
+        }while(!error);
+        shoot = false;
+        if(arrows == 0 && !wumpus)
+        {
+            this->alive = false;
+            cout << "The AI have run out of arrows! GAME OVER" << endl;
+        }
+
+    }
+}
+
+/*********************************************************************
+ ** Function: move_ai
+ ** Description: will move user
+ ** Parameters: int direction
+ ** Pre-Conditions: need variables, functions, and objects to exist
+ ** Post-Conditions: will change user position
+ *********************************************************************/
+/*void Game :: move_ai(int direction){
+    //north
+    if(direction == 1){
+        this->spotx -= 1;
+        this->ai_direction = "n";
+        this->previousturn = 1;
+        ai.add_move(1);
+    }
+    //south
+    else if(direction == 2){
+        this->spotx += 1;
+        this->ai_direction = "s";
+        this->previousturn = 2;
+        ai.add_move(2);
+    }
+    //east
+    else if(direction == 3){
+        this->spoty += 1;
+        this->ai_direction = "e";
+        this->previousturn = 3;
+        ai.add_move(3);
+    }
+    //west
+    else if(direction == 4){
+        this->spoty -= 1;
+        this->ai_direction = "w";
+        this->previousturn = 4;
+        ai.add_move(4);
+    }
+    
+}
+
+/*********************************************************************
+ ** Function: move_airandom
+ ** Description: randomly will move user
+ ** Parameters: bool oscillating
+ ** Pre-Conditions: need variables, functions, and objects to exist
+ ** Post-Conditions: will change user position depending on if the user has been going back and forth
+ *********************************************************************/
+/*void Game :: move_airandom(bool oscillating){
+    if(oscillating){
+        bool error = true;
+        do{
+            error = true;
+            int move = rand() * 4 + 1;
+            //north
+            if( previousturn != 1 && move == 1 && (spotx - 1 ) >= 0)
+                move_ai(1);
+            //south
+            else if(previousturn != 2 && move == 2 && (spotx + 1) < cavesize)
+                move_ai(2);
+            //east
+            else if(previousturn != 3 && move == 3 && (spoty + 1) < cavesize)
+                move_ai(3);
+            //west
+            else if(previousturn != 4 && move == 4 && (spoty - 1) >= 0)
+                move_ai(4);
+            else
+                error = false;
+        }while(!error);
+    }
+    else{
+        bool error = true;
+        do{
+            error = true;
+            int move = rand() * 4 + 1;
+            //north
+            if( move == 1 && (spotx - 1 ) >= 0)
+                move_ai(1);
+            //south
+            else if(move == 2 && (spotx + 1) < cavesize)
+                move_ai(2);
+            //east
+            else if(move == 3 && (spoty + 1) < cavesize)
+                move_ai(3);
+            //west
+            else if(move == 4 && (spoty - 1) >= 0)
+                move_ai(4);
+            else
+                error = false;
+        }while(!error);
+    }
+}
+
+/*********************************************************************
+ ** Function: strategic_move_ai
+ ** Description: will move user based off last move
+ ** Parameters: none
+ ** Pre-Conditions: need variables, functions, and objects to exist
+ ** Post-Conditions: will change user position
+ *********************************************************************/
+/*void Game :: strategic_move_ai(){
+    //moving north
+    if(previousturn == 2)
+        move_ai(1);
+    //moving south
+    else if(previousturn == 1)
+        move_ai(2);
+    //moving east
+    else if(previousturn == 4 )
+        move_ai(3);
+    //moving west
+    else if(previousturn == 3)
+        move_ai(4);
+}
+
+/*********************************************************************
+ ** Function: ai_percept
+ ** Description: will print percepts and play with booleans
+ ** Parameters: none
+ ** Pre-Conditions: need variables, functions, and objects to exist
+ ** Post-Conditions: will print percept and also change some booleans
+ *********************************************************************/
+/* void Game :: ai_percept(){
+    int event = caves.at(spotx).at(spoty).check_event();
+    for(int i = spotx - 1; i <= spotx + 1; i++){
+        for(int j = spoty - 1; j <= spoty + 1; j++){
+            if(i == spotx && j == spoty)
+                continue;
+            else if(i >= cavesize || i < 0 || j >= cavesize || j < 0)
+                continue;
+            else if(event > 0 ){
+                this->caves.at(i).at(j).percept_access();
+                if(event == 1)
+                    goodeventnearby = true;
+                else{
+                    badeventnearby = true;
+                    if(event == 4)
+                        shoot = true;
+                }
+            }
+        }
+    }
+}
+ */
