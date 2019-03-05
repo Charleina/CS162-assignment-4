@@ -1,5 +1,5 @@
 all:
-	g++ -g -std=c++11 application.cpp room.cpp event.hpp game.cpp wumpus.cpp bats.cpp pit.cpp gold.cpp -o wumpus
+	g++ -g -std=c++11 application.cpp ai.cpp room.cpp event.hpp game.cpp wumpus.cpp bats.cpp pit.cpp gold.cpp -o wumpus
 clean:
 	rm -rf *.o
 room:

@@ -47,14 +47,14 @@ Game :: Game(){
     this->pitty=0;
     this->goldx=0;
     this->goldy=0;
-    /*
+    
     this->previousturn = 0;
     this->previousturn2= 0;
     this->ai_direction = "";
     this->goodeventnearby = false;
     this->badeventnearby = false;
     this->shoot = false;
-    */
+    
     
     //creates the arrays
     /*(for(int row = 0; row < this->cavesize; row++){
@@ -146,12 +146,11 @@ void Game :: set_board(){
  ** Post-Conditions: game will start and end
  *********************************************************************/
 void Game :: run(){
-    //bool airun = false;
+    bool airun = false;
     
-    //airun =
-    this->welcome();
+    airun = this->welcome();
     
-    //if(!airun){
+    if(!airun){
         do{
             //hidden_coordinates();
             percept();
@@ -187,7 +186,7 @@ void Game :: run(){
         else
             cout << "CONGRATULATIONS!! You made it back to where you started with the gold and succeeded in your mission to Hunt the Wumpus!" << endl;
         //game over here
-    //}
+    }
     //else would be ai is doing it their self
     
 }
@@ -540,7 +539,7 @@ void Game :: superbat(){
  ** Pre-Conditions: none
  ** Post-Conditions: will return true or false depending if user wants ai to play
  *********************************************************************/
-void Game :: welcome(){
+bool Game :: welcome(){
     cout << "***********************************************" << endl;
     cout << "                                               " << endl;
     cout << "          Welcome to Hunt the Wumpus!          " << endl;
@@ -559,7 +558,7 @@ void Game :: welcome(){
     cout << "Use your Percept ability to sense your surroundings." << endl;
     cout << "The wumpus is currently sleeping in its room, when you think the Wumpus is in specific direction (n/s/e/w) from you, shoot an arrow in that direction. " << endl;
     cout << "DO NOT go into the room of the Wumpus, it will eat you alive!" << endl << endl;
-    /*
+    
     bool error = true;
     do{
         cout << "Would you like the computer to play for you? (y/n)" << endl;
@@ -583,7 +582,7 @@ void Game :: welcome(){
         }
         
     } while(!error);
-     */
+    
 }
 
 /*********************************************************************
@@ -735,7 +734,7 @@ void Game :: hidden_coordinates(){
  ** Pre-Conditions: board needs to be set up
  ** Post-Conditions: none
  *********************************************************************/
-/*void Game :: run_ai(){
+void Game :: run_ai(){
     bool event_nearby = false;
     //first try to find a corner without running into an event
     do{
@@ -751,10 +750,11 @@ void Game :: hidden_coordinates(){
             enact_event(event);
         
         //for error checking
-        hidden_coordinates();
-        cout << "next day" << endl << endl;
+        //hidden_coordinates();
+        cout << "next turn" << endl << endl;
         
         event_nearby = false;
+        
     }while(alive && !win);
     
     if(!win)
@@ -793,7 +793,7 @@ void Game :: hidden_coordinates(){
  ** Pre-Conditions: need variables, functions, and objects to exist
  ** Post-Conditions: will move the user or shoot an arrow
  *********************************************************************/
-/*void Game :: ai_prompt(bool nearby){
+void Game :: ai_prompt(bool nearby){
     if(!shoot){
         
         this->previousturn2 = previousturn;
@@ -950,7 +950,7 @@ void Game :: hidden_coordinates(){
  ** Pre-Conditions: need variables, functions, and objects to exist
  ** Post-Conditions: will change user position
  *********************************************************************/
-/*void Game :: move_ai(int direction){
+void Game :: move_ai(int direction){
     //north
     if(direction == 1){
         this->spotx -= 1;
@@ -989,7 +989,7 @@ void Game :: hidden_coordinates(){
  ** Pre-Conditions: need variables, functions, and objects to exist
  ** Post-Conditions: will change user position depending on if the user has been going back and forth
  *********************************************************************/
-/*void Game :: move_airandom(bool oscillating){
+void Game :: move_airandom(bool oscillating){
     if(oscillating){
         bool error = true;
         do{
@@ -1041,7 +1041,7 @@ void Game :: hidden_coordinates(){
  ** Pre-Conditions: need variables, functions, and objects to exist
  ** Post-Conditions: will change user position
  *********************************************************************/
-/*void Game :: strategic_move_ai(){
+void Game :: strategic_move_ai(){
     //moving north
     if(previousturn == 2)
         move_ai(1);
@@ -1063,7 +1063,7 @@ void Game :: hidden_coordinates(){
  ** Pre-Conditions: need variables, functions, and objects to exist
  ** Post-Conditions: will print percept and also change some booleans
  *********************************************************************/
-/* void Game :: ai_percept(){
+void Game :: ai_percept(){
     int event = caves.at(spotx).at(spoty).check_event();
     for(int i = spotx - 1; i <= spotx + 1; i++){
         for(int j = spoty - 1; j <= spoty + 1; j++){
@@ -1084,4 +1084,4 @@ void Game :: hidden_coordinates(){
         }
     }
 }
- */
+
